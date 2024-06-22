@@ -1,0 +1,15 @@
+{
+  "host": "localhost",
+  "port": 1337,
+  "url": "http://backend/api",
+  "proxy": {
+    "enabled": false
+  },
+  "cron": {
+    "enabled": false
+  },
+  "admin": {
+    "autoOpen": false,
+    "url": "http://backend/dashboard"
+  }
+}
