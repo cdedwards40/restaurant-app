@@ -1,6 +1,6 @@
 
 import React, { useState, useContext } from "react";
-import { FormGroup, Label, Input } from "reactstrap";
+import { FormGroup, Label, Input, FormFeedback } from "reactstrap";
 import fetch from "isomorphic-fetch";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import CardSection from "./cardSection";
@@ -12,8 +12,11 @@ function CheckoutForm() {
     address: "",
     city: "",
     state: "",
-    stripe_id: "",
+    stripe_id: ""
   });
+  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidCity, setIsValidCity] = useState(true)
+  const [isValidState, setIsValidState] = useState(true)
   const [error, setError] = useState("");
   const stripe = useStripe();
   const elements = useElements();
@@ -26,8 +29,41 @@ function CheckoutForm() {
     setData({ ...data, updateItem });
   }
 
+  const addressRe = new RegExp(/\d{1,5}\s.+/);
+  function validateAddress(address) {
+    if (addressRe.exec(address) === null) {
+      return false
+    } else {
+      return true
+    }
+  }
+
+  const cityRe = new RegExp(/^([A-Za-z]+\s?)+/);
+  function validateCity(city) {
+    if (cityRe.exec(city) != null && cityRe.exec(city)[0] === city)
+      return true
+    else
+      return false
+  }
+
+  const stateRe = new RegExp(/^[A-Z]{2}/);
+  function validateState(state) {
+    if (stateRe.exec(state) != null && stateRe.exec(state)[0] === state)
+      return true
+    else
+      return false
+  }
+
   async function submitOrder() {
     // event.preventDefault();
+
+    //validate input
+    setIsValidAddress(validateAddress(data['address']));
+    setIsValidCity(validateCity(data['city']));
+    setIsValidState(validateState(data['state']));
+    if (!isValidAddress || !isValidCity || !isValidState) {
+      return;
+    }
 
     // // Use elements.getElement to get a reference to the mounted Element.
     const cardElement = elements.getElement(CardElement);
@@ -72,7 +108,7 @@ function CheckoutForm() {
     //   },
     // });
   }
-
+  
   return (
     <div className="paper">
       <h5>Your information:</h5>
@@ -80,17 +116,20 @@ function CheckoutForm() {
       <FormGroup style={{ display: "flex" }}>
         <div style={{ flex: "0.90", marginRight: 10 }}>
           <Label>Address</Label>
-          <Input name="address" onChange={onChange} />
+          <Input name="address" invalid={!isValidAddress} onChange={onChange} />
+          <FormFeedback>Please enter a valid address</FormFeedback>
         </div>
       </FormGroup>
       <FormGroup style={{ display: "flex" }}>
         <div style={{ flex: "0.65", marginRight: "6%" }}>
           <Label>City</Label>
-          <Input name="city" onChange={onChange} />
+          <Input name="city" invalid={!isValidCity} onChange={onChange} />
+          <FormFeedback>Please enter a valid city</FormFeedback>
         </div>
         <div style={{ flex: "0.25", marginRight: 0 }}>
           <Label>State</Label>
-          <Input name="state" onChange={onChange} />
+          <Input name="state" invalid={!isValidState} onChange={onChange} />
+          <FormFeedback>Please enter a valid state</FormFeedback>
         </div>
       </FormGroup>
 
