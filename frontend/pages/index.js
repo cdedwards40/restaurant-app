@@ -1,23 +1,48 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Cart from "../components/cart"
 import {ApolloProvider,ApolloClient,HttpLink, InMemoryCache} from '@apollo/client';
 import RestaurantList from '../components/restaurantList';
 import { InputGroup, InputGroupAddon,Input} from "reactstrap";
 import AppContext from "../components/context";
-// import { useSession, signIn, signOut } from "next-auth/react"
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
 function Home() {
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
-    console.log(`URL: ${API_URL}`)
-    const [query, setQuery] = useState("");
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
+    const [restaurantQuery, setRestaurantQuery] = useState("");
     const link = new HttpLink({ uri: `${API_URL}/graphql`})
     const cache = new InMemoryCache()
     const client = new ApolloClient({link,cache});
     const appContext = useContext(AppContext);
-    // const { data: session } = useSession()
+    const router = useRouter();
+    const { asPath } = router;
 
-    // console.log('------------------------------')
-    // console.log(session)
+    function handleGoogleLogin(params) {
+        axios
+          .get(`${BACKEND_URL}/api/auth/google/callback?${params}`)
+          .then((res) => {
+            Cookies.set("token", res.data.jwt);
+            appContext.setUser(res.data.user);
+          })
+          .catch(err => {
+            console.log(err)
+          })
+    }
+
+    useEffect(() => {
+      if (asPath.length > 2) {
+          try {
+            handleGoogleLogin(asPath.slice(2, asPath.length));
+            router.replace("/", undefined, { shallow: true })
+          } catch {err => {
+            console.log('Error parsing query parameters.')
+            console.log(err)
+          }}
+          
+      }
+    }, [])
 
     return (
         <ApolloProvider client={client}>
@@ -27,13 +52,14 @@ function Home() {
                 <InputGroupAddon addonType="append"> Restaurant Search </InputGroupAddon>
                 <Input
                     onChange={(e) =>
-                    setQuery(e.target.value.toLocaleLowerCase())
+                    setRestaurantQuery(e.target.value.toLocaleLowerCase())
                     }
-                    value={query}
+                    value={restaurantQuery}
                 />
                 </InputGroup><br></br>
             </div>
-            <RestaurantList search={query} />
+            <RestaurantList search={restaurantQuery} />
+            {console.log(appContext)}
             {appContext.user !== false ? <Cart></Cart> : null}
         </ApolloProvider>
     );

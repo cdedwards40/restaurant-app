@@ -7,8 +7,6 @@ import Link from "next/link"
 // the alternative is using useContext as below
 function Cart() {
   let {cart,addItem,removeItem, user} = useContext(AppContext);
-  console.log('cart')
-  console.log(user)
   //const [cartA, setCartA] = useState({cart})
   //cart = value.cart;
   //console.log('props:'+ JSON.stringify(value));
@@ -30,8 +28,8 @@ function Cart() {
                 key={item.id}
               >
                 <div>
-                  <span id="item-price">&nbsp; ${item.price}</span>
-                  <span id="item-name">&nbsp; {item.name}</span>
+                  <span id="item-price">&nbsp; ${item.attributes.price}</span>
+                  <span id="item-name">&nbsp; {item.attributes.name}</span>
                 </div>
                 <div>
                   <Button

@@ -29,11 +29,19 @@ function RestaurantList(props){
   const GET_RESTAURANTS = gql`
     query {
       restaurants {
-        id
-        name
-        description
-        image {
-          url
+        data {
+          id
+          attributes {
+            name
+            description
+            image {
+              data {
+                attributes {
+                  url
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -42,11 +50,19 @@ function RestaurantList(props){
 const GET_DISHES = gql`
   query {
     dishes {
-      id
-      name
-      description
-      image {
-        url
+      data {
+        id
+        attributes {
+          name
+          description
+          image {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -57,8 +73,8 @@ const GET_DISHES = gql`
   if (error) return <p>ERROR</p>;
   if (!data) return <p>Not found</p>;
 
-let searchQuery = data.restaurants.filter((res) =>{
-    return res.name.toLowerCase().includes(props.search)
+let searchQuery = data.restaurants.data.filter((res) =>{
+    return res.attributes.name.toLowerCase().includes(props.search)
   })
 
 // let restId = searchQuery[0].id   -- commmented this out to get to work
@@ -75,15 +91,15 @@ if(searchQuery.length > 0){
           top={true}
           style={{ height: 200 }}
           src={
-          `${API_URL}`+ res.image.url
+          `${API_URL}`+ res.attributes.image.data.attributes.url
           }
         />
         <CardBody>
-          <CardText>{res.description}</CardText>
+          <CardText>{res.attributes.description}</CardText>
         </CardBody>
         <div className="card-footer">
         
-        <Button color="info" onClick={()=> setRestaurantID(res.id)}>{res.name}</Button>
+        <Button color="info" onClick={()=> setRestaurantID(res.id)}>{res.attributes.name}</Button>
          
         </div>
       </Card>

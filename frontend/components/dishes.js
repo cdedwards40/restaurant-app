@@ -20,15 +20,28 @@ function Dishes({restId, search}){
   const GET_RESTAURANT_DISHES = gql`
     query($id: ID!) {
       restaurant(id: $id) {
-        id
-        name
-        dishes {
+        data {
           id
-          name
-          description
-          price
-          image {
-            url
+          attributes {
+            name
+            dishes {
+              data {
+                id
+                attributes {
+                  name
+                  description
+                  price
+                  image {
+                    data {
+                      id
+                      attributes {
+                        url
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -45,14 +58,14 @@ function Dishes({restId, search}){
   if (error) return <p>ERROR here</p>;
   if (!data) return <p>Not found</p>;
 
-  let restaurant = data.restaurant;
+  let restaurant = data.restaurant.data;
 
   if (restId > 0){
     return (
       <>
-          {restaurant.dishes
+          {restaurant.attributes.dishes.data
             .filter((dish) => {
-              return dish.name.toLowerCase().includes(search)}
+              return dish.attributes.name.toLowerCase().includes(search)}
             )
             .map((res) => (
             <Col xs="6" sm="4" style={{ padding: 0 }} key={res.id}>
@@ -60,16 +73,17 @@ function Dishes({restId, search}){
                 <CardImg
                   top={true}
                   style={{ height: 150, width:150 }}
-                  src={`${API_URL}${res.image.url}`}
+                  src={`${API_URL}${res.attributes.image.data.attributes.url}`}
                 />
                 <CardBody>
-                  <CardTitle>{res.name}</CardTitle>
-                  <CardText>{res.description}</CardText>
+                  <CardTitle>{res.attributes.name}</CardTitle>
+                  <CardText>{res.attributes.description}</CardText>
                 </CardBody>
                 <div className="card-footer">
                   <Button color="info"
                     outline 
                     onClick = {()=> {
+                        console.log("add item : ", res)
                         addItem(res)
                     }}
                   >

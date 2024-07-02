@@ -30,7 +30,7 @@ const Register = () => {
         <Col sm="12" md={{ size: 5, offset: 3 }}>
           <div className="paper">
             <div className="header">
-              <img src={`${API_URL}/uploads/5a60a9d26a764e7cba1099d8b157b5e9.png`} />
+              Welcome!
             </div>
             <section className="wrapper">
               {Object.entries(error).length !== 0 &&
@@ -145,6 +145,10 @@ const Register = () => {
             background-color: #2196f3;
             margin-bottom: 30px;
             border-radius-top: 6px;
+            color: white;
+            font-size: 2.5em;
+            padding-left: 30px;
+            padding-top: 30px;
           }
           .wrapper {
             padding: 10px 30px 20px 30px !important;

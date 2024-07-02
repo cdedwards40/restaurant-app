@@ -14,10 +14,18 @@ function Checkout() {
   // isAuthenticated is passed to the cart component to display order button
   //const isAuthenticated  = true;
   
+  const stripeToken = `${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}`;
+  
+
+  console.log('stripe token - ', stripeToken)
+
   // load stripe to inject into elements components
   const stripePromise = loadStripe(
-    process.env.STRIP_TOKEN
+    stripeToken
   );
+
+
+  console.log('stripe promise - ', stripePromise)
 
   return (
     <Row>

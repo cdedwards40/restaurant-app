@@ -8,42 +8,39 @@
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
-    "lint": "eslint ."
-  },
-  "devDependencies": {
-    "babel-eslint": "^10.0.0",
-    "eslint": "^6.0.0",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.18.0",
-    "eslint-plugin-react": "^7.14.0"
+    "deploy": "strapi deploy"
   },
   "dependencies": {
-    "knex": "^0.21.6",
+    "@strapi/admin": "4.25.1",
+    "@strapi/plugin-cloud": "4.25.1",
+    "@strapi/plugin-content-manager": "4.25.1",
+    "@strapi/plugin-content-type-builder": "4.25.1",
+    "@strapi/plugin-documentation": "4.25.1",
+    "@strapi/plugin-email": "4.25.1",
+    "@strapi/plugin-graphql": "4.25.1",
+    "@strapi/plugin-i18n": "4.25.1",
+    "@strapi/plugin-upload": "4.25.1",
+    "@strapi/plugin-users-permissions": "4.25.1",
+    "@strapi/strapi": "4.25.1",
+    "@strapi/utils": "4.25.1",
+    "better-sqlite3": "8.6.0",
     "lodash": "^4.17.5",
-    "sqlite3": "^5.0.0",
-    "strapi": "3.0.0-beta.14",
-    "strapi-admin": "3.0.0-beta.14",
-    "strapi-hook-bookshelf": "3.0.0-beta.14",
-    "strapi-hook-knex": "^3.0.0-beta.14",
-    "strapi-plugin-content-manager": "3.0.0-beta.14",
-    "strapi-plugin-content-type-builder": "3.0.0-beta.14",
-    "strapi-plugin-documentation": "3.0.0-beta.14",
-    "strapi-plugin-email": "3.0.0-beta.14",
-    "strapi-plugin-graphql": "3.0.0-beta.14",
-    "strapi-plugin-settings-manager": "3.0.0-beta.14",
-    "strapi-plugin-upload": "3.0.0-beta.14",
-    "strapi-plugin-users-permissions": "3.0.0-beta.14",
-    "strapi-utils": "3.0.0-beta.14",
-    "stripe": "^8.109.0"
+    "pg": "^8.12.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "5.3.4",
+    "sqlite3": "^5.0.2",
+    "stripe": "^8.109.0",
+    "styled-components": "5.3.3"
   },
   "author": {
-    "name": "A Strapi developer + updates john R Williams jrw@mit.edu"
+    "name": "A Strapi developer"
   },
   "strapi": {
-    "uuid": "a45046ad-52e3-426c-a7aa-25c5de132bfe"
+    "uuid": "d079068f-b1d3-4947-9e9d-df0c29dc46bd"
   },
   "engines": {
-    "node": ">=12.0.0",
+    "node": ">=18.0.0 <=20.x.x",
     "npm": ">=6.0.0"
   },
   "license": "MIT"

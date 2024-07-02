@@ -23,7 +23,6 @@ function MyApp(props){
     let foundItem = true;
     if(items.length > 0){
       foundItem = items.find((i) => i.id === item.id);
-     
       if(!foundItem) foundItem = false;
     }
     else{
@@ -38,9 +37,9 @@ function MyApp(props){
       temp.quantity = 1;
       var newCart = {
           items: [...state.cart.items,temp],
-          total: Number(Math.round((state.cart.total + item.price) + "e2") + "e-2"),
+          total: Number(Math.round((state.cart.total + item.attributes.price) + "e2") + "e-2"),
       }
-      setState({cart:newCart})
+      setState({...state, cart: newCart})
       console.log(`Total items: ${JSON.stringify(newCart)}`)
     } else {
       // we already have it so just increase quantity ++
@@ -52,11 +51,11 @@ function MyApp(props){
              }else{
             return item;
           }}),
-          total: Number(Math.round((state.cart.total + item.price) + "e2") + "e-2"),
+          total: Number(Math.round((state.cart.total + item.attributes.price) + "e2") + "e-2"),
         }      
     }
     
-    setState({cart: newCart});  // problem is this is not updated yet
+    setState({...state, cart: newCart});  // problem is this is not updated yet
     console.log(`state reset to cart:${JSON.stringify(state)}`)
      
   };
@@ -72,21 +71,21 @@ function MyApp(props){
          }else{
         return item;
       }}),
-      total: Number(Math.round((state.cart.total - item.price) + "e2") + "e-2"),
+      total: Number(Math.round((state.cart.total - item.attributes.price) + "e2") + "e-2"),
       }
       //console.log(`NewCart after remove: ${JSON.stringify(newCart)}`)
     } else { // only 1 in the cart so remove the whole item
       console.log(`Try remove item ${JSON.stringify(foundItem)}`)
       const index = items.findIndex((i) => i.id === foundItem.id);
       items.splice(index, 1);
-      var newCart= { items: items, total: Number(Math.round((state.cart.total - item.price) + "e2") + "e-2")} 
+      var newCart= { items: items, total: Number(Math.round((state.cart.total - item.attributes.price) + "e2") + "e-2")} 
     }
-    setState({cart:newCart});
+    setState({...state, cart: newCart});
   }
 
   return (
     // <SessionProvider session={pageProps.session}>
-    <AppContext.Provider value={{cart: state.cart, addItem: addItem, removeItem: removeItem,isAuthenticated:false,user:state.user,setUser:setUser}}>
+    <AppContext.Provider value={{cart: state.cart, addItem: addItem, removeItem: removeItem, isAuthenticated:false, user:state.user, setUser:setUser}}>
       <Head>
         <link
           rel="stylesheet"
@@ -94,6 +93,7 @@ function MyApp(props){
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossOrigin="anonymous"
         />
+        <script src="https://js.stripe.com/v3/"></script>
       </Head>
     
       <Layout>

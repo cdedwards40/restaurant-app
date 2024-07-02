@@ -7,6 +7,8 @@ import CardSection from "./cardSection";
 import AppContext from "./context";
 import Cookies from "js-cookie";
 
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
+
 function CheckoutForm() {
   const [data, setData] = useState({
     address: "",
@@ -19,6 +21,7 @@ function CheckoutForm() {
   const [isValidState, setIsValidState] = useState(true)
   const [error, setError] = useState("");
   const stripe = useStripe();
+  // var stripe = Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
   const elements = useElements();
   const appContext = useContext(AppContext);
 
@@ -54,7 +57,7 @@ function CheckoutForm() {
       return false
   }
 
-  async function submitOrder() {
+  async function submitOrder(event) {
     // event.preventDefault();
 
     //validate input
@@ -71,27 +74,28 @@ function CheckoutForm() {
     // // Pass the Element directly to other Stripe.js methods:
     // // e.g. createToken - https://stripe.com/docs/js/tokens_sources/create_token?type=cardElement
     // get token back from stripe to process credit card
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
 
     const token = await stripe.createToken(cardElement);
     const userToken = Cookies.get("token");
-    const response = await fetch(`${API_URL}/orders`, {
+    const response = await fetch(`http://localhost:1337/api/orders`, {
       method: "POST",
-      headers: userToken && { Authorization: `Bearer ${userToken}` },
+      headers: userToken && { Authorization: `Bearer ${userToken}`, "Content-Type": "application/json"},
       body: JSON.stringify({
-        amount: Number(Math.round(appContext.cart.total + "e2") + "e-2"),
-        dishes: appContext.cart.items,
-        address: data.address,
-        city: data.city,
-        state: data.state,
-        // token: (API_URL === "http://localhost:1337") ? "tok_visa" : token.token.id,
-        token: "tok_visa",
+          amount: Number(Math.round(appContext.cart.total + "e2") + "e-2"),
+          dishes: JSON.stringify(appContext.cart.items),
+          address: data.address,
+          city: data.city,
+          state: data.state,
+          // token: (API_URL === "http://localhost:1337") ? "tok_visa" : token.token.id,
+          token: "tok_visa",
+          // token: token.token.id,
       }),
     });
 
     if (!response.ok) {
       setError(response.statusText);
-      console.log("SUCCESS")
+    } else {
+      alert("Order placed successfully!")
     }
 
     // OTHER stripe methods you can use depending on app

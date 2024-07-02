@@ -1,30 +1,11 @@
 /* /lib/auth.js */
 
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import Router from "next/router";
 import Cookie from "js-cookie";
 import axios from "axios";
-// import NextAuth from "next-auth"
-// import GoogleProvider from "next-auth/providers/google";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
-
-// export default NextAuth({
-//   // Configure one or more authentication providers
-//   providers: [
-//       GoogleProvider({
-//           // clientId: process.env.GOOGLE_CLIENT_ID as string,
-//           // clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-//           clientId: process.env.GOOGLE_CLIENT_ID,
-//           clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//       }),
-//       // GithubProvider({
-//       //     clientId: process.env.GITHUB_ID as string,
-//       //     clientSecret: process.env.GITHUB_SECRET as string,
-//       // }),
-//       // ...add more providers here
-//   ],
-// })
 
 //register a new user
 export const registerUser = (username, email, password) => {
@@ -33,18 +14,22 @@ export const registerUser = (username, email, password) => {
     return;
   }
   return new Promise((resolve, reject) => {
+    let query = req.url.split("?")[1];
+
     axios
-      .post(`${API_URL}/auth/local/register`, { username, email, password })
+      .post(`${API_URL}/api/auth/local/register`, { username, email, password })
       .then((res) => {
+        
+        appContext.setUser(res.data.username);
+
         //set token response from Strapi for server validation
         Cookie.set("token", res.data.jwt);
 
         //resolve the promise to set loading to false in SignUp form
         resolve(res);
+
         //redirect back to home page for restaurance selection
-        // console.log("in auth getting ready to push")
-        // Router.push("/");
-        // console.log("done pushing")
+        Router.push("/");
       })
       .catch((error) => {
         //reject the promise and pass the error object back to the form
@@ -61,7 +46,7 @@ export const login = (identifier, password) => {
 
   return new Promise((resolve, reject) => {
     axios
-      .post(`${API_URL}/auth/local/`, { identifier, password })
+      .post(`${API_URL}/api/auth/local/`, { identifier, password })
       .then((res) => {
         //set token response from Strapi for server validation
         Cookie.set("token", res.data.jwt);
@@ -70,41 +55,6 @@ export const login = (identifier, password) => {
         resolve(res);
         //redirect back to home page for restaurance selection
         Router.push("/");
-      })
-      .catch((error) => {
-        //reject the promise and pass the error object back to the form
-        reject(error);
-      });
-  });
-};
-
-export const googleLogin = () => {
-  //prevent function from being ran on the server
-  if (typeof window === "undefined") {
-    return;
-  }
-  
-  return new Promise((resolve, reject) => {
-    const h2 = {
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Access-Control-Allow-Origin': "*"
-      }
-    };
-    console.log('trying to connect to ' + `${API_URL}/connect/google`)
-    axios
-      .get(`${API_URL}/connect/google`)
-      .then((res) => {
-        console.log(res)
-        console.log(res.data)
-
-        // //set token response from Strapi for server validation
-        // Cookie.set("token", res.data.jwt);
-
-        // //resolve the promise to set loading to false in SignUp form
-        // resolve(res);
-        // //redirect back to home page for restaurance selection
-        // Router.push("/");
       })
       .catch((error) => {
         //reject the promise and pass the error object back to the form
