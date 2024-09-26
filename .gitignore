@@ -2,6 +2,8 @@
 *.bak
 .next/
 data/
+*.pem
+letsencrypt/
 
 ############################
 # OS X

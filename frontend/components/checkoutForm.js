@@ -77,7 +77,7 @@ function CheckoutForm() {
 
     const token = await stripe.createToken(cardElement);
     const userToken = Cookies.get("token");
-    const response = await fetch(`http://localhost:1337/api/orders`, {
+    const response = await fetch(`https://chris-edwardsfullstackrestaurantapplication.click/strapi/api/orders`, {
       method: "POST",
       headers: userToken && { Authorization: `Bearer ${userToken}`, "Content-Type": "application/json"},
       body: JSON.stringify({

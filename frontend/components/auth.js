@@ -14,13 +14,10 @@ export const registerUser = (username, email, password) => {
     return;
   }
   return new Promise((resolve, reject) => {
-    let query = req.url.split("?")[1];
-
     axios
       .post(`${API_URL}/api/auth/local/register`, { username, email, password })
       .then((res) => {
         
-        appContext.setUser(res.data.username);
 
         //set token response from Strapi for server validation
         Cookie.set("token", res.data.jwt);

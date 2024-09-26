@@ -9,8 +9,10 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 
 function Home() {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
-    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
+    // const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost/strapi";
+    // const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost/strapi";
     const [restaurantQuery, setRestaurantQuery] = useState("");
     const link = new HttpLink({ uri: `${API_URL}/graphql`})
     const cache = new InMemoryCache()

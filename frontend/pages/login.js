@@ -108,7 +108,8 @@ function Login(props) {
               </Form>
               <FormGroup style={{ paddingTop: 25, fontSize: "1.2em", textAlign: "center"}}>
                   <Label></Label>
-                  <a href="http://localhost/strapi/api/connect/google">
+	  {/* <a href="http://localhost/strapi/api/connect/google">*/}
+                  <a href="https://chris-edwardsfullstackrestaurantapplication.click/strapi/api/connect/google">
                     <button className="gsi-material-button">
                       <div className="gsi-material-button-state"></div>
                       <div className="gsi-material-button-content-wrapper">
@@ -126,7 +127,7 @@ function Login(props) {
                       </div>
                     </button>
                   </a>    
-                  </FormGroup>
+                </FormGroup>
             </section>
           </div>
         </Col>
